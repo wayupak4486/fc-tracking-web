@@ -1,0 +1,31 @@
+git add .<div class="card" id="output">
+  <h2>กำลังโหลดข้อมูล...</h2>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const orderId = params.get("?id=240804-001");
+
+  fetch("https://script.google.com/macros/s/AKfycbxNafeUxqZ-m91C32Tey3q_K8bY3YQWhgLCECAo0M3xYq0N4MfjzqM-98zsw3Hdr3Di/exec")
+    .then(res => res.json())
+    .then(data => {
+      const found = data.find(item => item.order_id === orderId);
+      const output = document.getElementById("output");
+
+      if (found) {
+        output.innerHTML = `
+          <h2>เลขออเดอร์: ${found.order_id}</h2>
+          <p><strong>ชื่อลูกค้า:</strong> ${found.customer_name}</p>
+          <p><strong>สถานะ:</strong> ${found.status}</p>
+          <p><strong>อัปเดตล่าสุด:</strong> ${found.updated_at}</p>
+          <img src="${found.product_image}" alt="รูปสินค้า" style="max-width:100%; height:auto;">
+        `;
+      } else {
+        output.innerHTML = "<h2>ไม่พบข้อมูลพัสดุนี้</h2>";
+      }
+    })
+    .catch(error => {
+      document.getElementById("output").innerHTML = "<h2>เกิดข้อผิดพลาดในการโหลดข้อมูล</h2>";
+      console.error(error);
+    });
+</script>
